@@ -4,7 +4,7 @@
 
 [Impostor](https://github.com/Impostor/Impostor) 由 [AeonLucid](https://github.com/AeonLucid) 首创，是社区驱动的 Among Us 开源服务器实现的开山之作。然而，在 [miniduikboot](https://github.com/miniduikboot) 与 [NikoCat233](https://github.com/NikoCat233) 接手后，Impostor 越来越像一个闭源项目，加之其支持的功能过于基础，难以满足实际的服务器运营需求。
 
-随后，开发者 [NikoCat233](https://github.com/NikoCat233) 基于 Impostor 开发了名为 **Nmpostor** 的服务端，但**每人 27 美元**的售价对于开源社区而言过于昂贵。社区陷入了一种窘境：没有一个功能丰富、真正开放的 Among Us 私服工具。
+随后，开发者 [NikoCat233](https://github.com/NikoCat233) 基于 Impostor 开发了名为 **Nmpostor** 的服务端，但**每人 180 人民币**的售价对于开源社区而言过于昂贵。社区陷入了一种窘境：没有一个功能丰富、真正开放的 Among Us 私服工具。
 
 在这样的背景下，[HayashiUme](https://github.com/HayashiUme) 与 [Fangkuai](https://github.com/FangkuaiYa) 共同开发了 [Next-Impostor](https://github.com/BunchHanpiDev/Next-Impostor)——一个功能更强大的开源替代方案。项目发展迅速，但功能的快速堆砌导致 bug 层出不穷、架构日益臃肿，最终不得不停止开发。
 
@@ -27,7 +27,7 @@ Empostor 建立在以下优秀项目的基础之上：
 
 | 项目 | 描述 |
 | :--- | :--- |
-| [Next.Hazel](https://github.com/willardf/Hazel-Networking) | 轻量级 UDP 网络库，为底层传输层提供支持。 |
+| [Hazel](https://github.com/willardf/Hazel-Networking) | 轻量级 UDP 网络库，为底层传输层提供支持。 |
 | [Reactor.Impostor](https://github.com/NuclearPowered/Reactor.Impostor) | 基于 Reactor 客户端的模组框架集成参考。 |
 | [Fast-Impostor](https://github.com/BunchHanpiDev/Fast-Impostor) | Fangkuai 开发的性能增强版 Impostor，优化在两个项目间共享。 |
 | [Next-Impostor](https://github.com/BunchHanpiDev/Next-Impostor) | HayashiUme 与 Fangkuai 的野心之作——也是关于范围控制与稳定性的一课。 |
