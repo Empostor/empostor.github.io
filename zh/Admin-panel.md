@@ -8,12 +8,14 @@ Empostor 内置基于 Web 的管理面板，可通过 `http://your-server:22023/
 
 ```json
 "Admin": {
-  "Password": "changeme",
+  "Password": "your-strong-password-here",
   "MarketplaceUrl": "https://raw.githubusercontent.com/your-org/your-repo/main/marketplace/plugins.json"
 }
 ```
 
-首次访问时显示登录页面。登录成功后设置有效期为 8 小时的会话 Cookie。点击**退出登录**可立即清除。
+密码在内存和 Cookie 中均使用 SHA256 哈希存储 — 明文密码绝不会存储在浏览器中或直接比较。首次访问时显示登录页面。登录成功后设置有效期为 8 小时的会话 Cookie（HttpOnly、Secure、SameSite=Strict）。点击**退出登录**可立即清除。
+
+同一 IP 连续 5 次登录失败后，该 IP 将被锁定 15 分钟。
 
 所有 `/api/admin/` 下的 API 端点在 Cookie 缺失或错误时返回 `401 Unauthorized`。
 

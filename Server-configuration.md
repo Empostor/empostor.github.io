@@ -11,6 +11,7 @@
 | **ListenIp**   | `0.0.0.0`   | The network interface to listen on. If you do not know what to put here, use `0.0.0.0`. Since 1.2.2 it is also possible to use hostnames instead of IPv4 addresses, these must resolve to a valid IPv4 address.                                                                                                                                                                                        |
 | **ListenPort** | `22023`     | The listen port of the server, usually `22023`. For port forwarding purposes: this is an UDP port                                                                                                                                                                                                                                                                                                                                                       |
 
+
 ### HttpServer
 
 Empostor has an Http Server that is used by recent versions of Among Us to connect to. See [the Http Server page](Http-server.md) for more details on how to set this up.
@@ -65,7 +66,7 @@ The `Admin` configuration is used to set the admin password and plugin marketpla
 
 | Key | Default | Description |
 | :--- | :--- | :--- |
-| Password | `CHANGE-ME` | The admin password for the server, used for authentication. Make sure to change this to a strong, complex password. |
+| Password | *(empty — must be set)* | The admin password for the server, used for authentication. Set a strong, complex password. The server logs a warning at startup if this is left empty or set to a known default. |
 | MarketplaceUrl | `https://raw.githubusercontent.com/Empostor/Empostor/main/marketplace/plugins.json` | A URL pointing to a `plugins.json` file. This file defines the list of plugins available in the plugin marketplace. |
 
 ### DiscordWebhook
@@ -137,6 +138,32 @@ For example, to add logging to a file, you should add the following snippet to y
 Next to that, you also need to copy over Serilog.Sinks.File.dll from [NuGet](https://www.nuget.org/packages/Serilog.Sinks.File/). See the [Serilog.Sinks.File documentation](https://github.com/serilog/serilog-sinks-file#json-appsettingsjson-configuration) for a list of parameters that can be configured.
 
 Other Serilog sinks are also supported, but are out of scope for this documentation.
+
+### PortPool
+
+Dynamic delta ports are used for player authentication. See [Firewall & Dynamic Ports](Firewall-and-ports.md) for details.
+
+| Key            | Default | Description                                      |
+|----------------|---------|--------------------------------------------------|
+| **Start**      | `22024` | First port in the auth port pool (inclusive)     |
+| **End**        | `22124` | Last port in the auth port pool (inclusive)      |
+
+### ServerConfig (Firewall)
+
+| Key               | Default | Description                                                        |
+|-------------------|---------|--------------------------------------------------------------------|
+| **UseUfw**        | `false` | Auto-manage ufw rules for delta ports (Linux only)                |
+| **UseFirewalld**  | `false` | Auto-manage firewalld rules for delta ports (Linux only)          |
+
+On Windows, keep both `false`. See [Firewall & Dynamic Ports](Firewall-and-ports.md).
+
+### IP Geolocation
+
+Empostor automatically resolves player IPs to geographic locations using [ip-api.com](http://ip-api.com). No API key required. Results are shown in connection logs and the admin panel client detail modal. Private/reserved IPs are skipped.
+
+| Key                  | Default | Description                            |
+|----------------------|---------|----------------------------------------|
+| *(no configuration)* | —       | Always enabled; requires outbound HTTP |
 
 ## Config providers
 

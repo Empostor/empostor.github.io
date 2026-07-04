@@ -65,7 +65,7 @@ Empostor 提供一些兼容性选项以增加灵活性，但可能无法正常�
 
 | 键 | 默认值 | 描述 |
 | :--- | :--- | :--- |
-| Password | `CHANGE-ME` | 服务器的管理员密码，用于认证。务必改为强密码。 |
+| Password | *(空 — 必须设置)* | 服务器的管理员密码，用于认证。请设置一个强密码。如果留空或使用已知默认值，服务器启动时会记录警告。 |
 | MarketplaceUrl | `https://raw.githubusercontent.com/Empostor/Empostor/main/marketplace/plugins.json` | 指向 `plugins.json` 文件的 URL。该文件定义了插件市场中可用的插件列表。 |
 
 ### DiscordWebhook
