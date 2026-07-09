@@ -71,17 +71,12 @@ The `Admin` configuration is used to set the admin password and plugin marketpla
 
 ### DiscordWebhook
 
-Send game events to a Discord channel via webhooks. See [Discord Webhook](Discord-webhook.md) for details.
+Send game events to Discord channels via webhooks. Events are split into two categories: matchmaker (game lifecycle) and admin (moderation). See [Discord Webhook](Discord-webhook.md) for details.
 
 | Key | Default | Description |
 | :--- | :--- | :--- |
-| **Enabled** | `false` | Whether the Discord webhook integration is enabled. |
-| **WebhookUrl** | `""` | The Discord webhook URL to POST messages to. |
-| **NotifyOnGameCreated** | `true` | Send a notification when a new game lobby is created. |
-| **NotifyOnBan** | `true` | Send a notification when a player is banned. |
-| **NotifyOnReport** | `true` | Send a notification when a player reports a body. |
-| **NotifyOnPlayerJoin** | `false` | Send a notification when a player joins a game. |
-| **NotifyOnGameEnded** | `false` | Send a notification when a game ends. |
+| **MatchmakerUrl** | `""` | Discord webhook URL for matchmaker events (Game Created, Game Started, Game Ended, Player Joined). Leave empty to disable. |
+| **AdminUrl** | `""` | Discord webhook URL for admin events (Player Banned, Player Reported). Leave empty to disable. |
 
 ### PlayerStats
 
