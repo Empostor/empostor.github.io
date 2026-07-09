@@ -70,17 +70,12 @@ Empostor 提供一些兼容性选项以增加灵活性，但可能无法正常�
 
 ### DiscordWebhook
 
-通过 Webhook 将游戏事件发送到 Discord 频道。详见 [Discord 通知](Discord-webhook.md)。
+通过 Webhook 将游戏事件发送到 Discord 频道。事件分为两个类别：对局（游戏生命周期）和管理（审核）。详见 [Discord 通知](Discord-webhook.md)。
 
 | 键 | 默认值 | 描述 |
 | :--- | :--- | :--- |
-| **Enabled** | `false` | 是否启用 Discord webhook 集成。 |
-| **WebhookUrl** | `""` | 用于 POST 消息的 Discord webhook URL。 |
-| **NotifyOnGameCreated** | `true` | 创建新游戏房间时发送通知。 |
-| **NotifyOnBan** | `true` | 玩家被封禁时发送通知。 |
-| **NotifyOnReport** | `true` | 玩家举报时发送通知。 |
-| **NotifyOnPlayerJoin** | `false` | 玩家加入游戏时发送通知。 |
-| **NotifyOnGameEnded** | `false` | 游戏结束时发送通知。 |
+| **MatchmakerUrl** | `""` | 对局事件的 Discord Webhook URL（游戏创建、游戏开始、游戏结束、玩家加入）。留空禁用。 |
+| **AdminUrl** | `""` | 管理事件的 Discord Webhook URL（玩家踢出、玩家举报）。留空禁用。 |
 
 ### PlayerStats（玩家统计）
 
