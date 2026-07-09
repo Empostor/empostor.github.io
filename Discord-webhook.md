@@ -7,11 +7,13 @@ Events are split into two categories, each with its own webhook URL:
 - **Matchmaker** — game lifecycle events (Game Created, Game Started, Game Ended, Player Joined)
 - **Admin** — moderation events (Player Banned, Player Reported)
 
-This feature is **disabled by default**. Enable it in `config.json` and provide webhook URLs to activate it. Leave a URL empty to disable its category.
+This feature is **disabled by default**. Configure it via the **Admin Panel** (Discord tab) or by setting initial defaults in `config.json`.
+
+> **Note**: Settings changed through the admin panel are persisted to `Data/DiscordWebhookData.json` and survive restarts. The `config.json` values are only used as fallback defaults on first launch.
 
 ## Configuration
 
-Add the `DiscordWebhook` section to your `config.json`:
+Add the `DiscordWebhook` section to your `config.json` for initial defaults:
 
 ```json
 {

@@ -7,7 +7,9 @@ Empostor 可以通过 [Webhook](https://support.discord.com/hc/en-us/articles/22
 - **Matchmaker（对局）** — 游戏生命周期事件（游戏创建、游戏开始、游戏结束、玩家加入）
 - **Admin（管理）** — 管理/审核事件（玩家踢出、玩家举报）
 
-此功能**默认禁用**。在 `config.json` 中提供 Webhook URL 即可激活。将 URL 留空则会禁用该类别。
+此功能**默认禁用**。通过**管理面板**（Discord 选项卡）配置，或在 `config.json` 中设置初始默认值。
+
+> **注意**：通过管理面板更改的设置会持久化到 `Data/DiscordWebhookData.json`，重启后仍然有效。`config.json` 中的值仅在首次启动时作为回退默认值使用。
 
 ## 配置
 

@@ -72,10 +72,25 @@ Empostor 提供一些兼容性选项以增加灵活性，但可能无法正常�
 
 通过 Webhook 将游戏事件发送到 Discord 频道。事件分为两个类别：对局（游戏生命周期）和管理（审核）。详见 [Discord 通知](Discord-webhook.md)。
 
+> **支持热修改**：通过管理面板更改的设置会保存到 `Data/DiscordWebhookData.json`。以下 `config.json` 值仅在首次启动时作为初始默认值。
+
 | 键 | 默认值 | 描述 |
 | :--- | :--- | :--- |
 | **MatchmakerUrl** | `""` | 对局事件的 Discord Webhook URL（游戏创建、游戏开始、游戏结束、玩家加入）。留空禁用。 |
 | **AdminUrl** | `""` | 管理事件的 Discord Webhook URL（玩家踢出、玩家举报）。留空禁用。 |
+
+### HPLP（公共大厅列表）
+
+为 Starlight 客户端发现提供公共游戏列表端点。详见 [HPLP](Hplp-server-list.md)。
+
+> **支持热修改**：通过管理面板更改的设置会保存到 `Data/HplpData.json`。以下 `config.json` 值仅在首次启动时作为初始默认值。
+
+| 键 | 默认值 | 描述 |
+| :--- | :--- | :--- |
+| **Enabled** | `false` | 是否启用 HPLP 端点（`GET /x-api/games`）。 |
+| **RegionId** | `"default"` | 向 Starlight 客户端报告的区域标识符。 |
+| **RegionName** | `"Empostor Server"` | 在 Starlight 中显示的人类可读区域名称。 |
+| **PublicUrl** | `""` | Starlight 客户端的公开 URL。为空时自动生成。 |
 
 ### PlayerStats（玩家统计）
 
@@ -89,6 +104,8 @@ Empostor 提供一些兼容性选项以增加灵活性，但可能无法正常�
 ### ChatFilter（聊天过滤）
 
 过滤游戏内聊天的屏蔽词和刷屏限速。详见 [聊天过滤](Admin-panel.md#聊天过滤)。
+
+> **支持热修改**：通过管理面板更改的设置会保存到 `Data/ChatFilterData.json`。以下 `config.json` 值仅在首次启动时作为初始默认值。
 
 | 键 | 默认值 | 描述 |
 | :--- | :--- | :--- |

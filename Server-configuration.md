@@ -73,10 +73,25 @@ The `Admin` configuration is used to set the admin password and plugin marketpla
 
 Send game events to Discord channels via webhooks. Events are split into two categories: matchmaker (game lifecycle) and admin (moderation). See [Discord Webhook](Discord-webhook.md) for details.
 
+> **Hot-editable**: Settings changed via the Admin Panel are saved to `Data/DiscordWebhookData.json`. The `config.json` values below are only used as initial defaults.
+
 | Key | Default | Description |
 | :--- | :--- | :--- |
 | **MatchmakerUrl** | `""` | Discord webhook URL for matchmaker events (Game Created, Game Started, Game Ended, Player Joined). Leave empty to disable. |
 | **AdminUrl** | `""` | Discord webhook URL for admin events (Player Banned, Player Reported). Leave empty to disable. |
+
+### HPLP
+
+Serve a public game list endpoint for Starlight client discovery. See [HPLP](Hplp-server-list.md) for details.
+
+> **Hot-editable**: Settings changed via the Admin Panel are saved to `Data/HplpData.json`. The `config.json` values below are only used as initial defaults.
+
+| Key | Default | Description |
+| :--- | :--- | :--- |
+| **Enabled** | `false` | Whether the HPLP endpoint (`GET /x-api/games`) is enabled. |
+| **RegionId** | `"default"` | Region identifier reported to Starlight clients. |
+| **RegionName** | `"Empostor Server"` | Human-readable region name displayed in Starlight. |
+| **PublicUrl** | `""` | Public URL for Starlight clients. Auto-generated if empty. |
 
 ### PlayerStats
 
@@ -90,6 +105,8 @@ Track per-player game statistics viewable in the admin panel and via `/stat` com
 ### ChatFilter
 
 Filter in-game chat for blocked words and rate-limit spam. See [Chat Filter](Admin-panel.md#chat-filter) for details.
+
+> **Hot-editable**: Settings changed via the Admin Panel are saved to `Data/ChatFilterData.json`. The `config.json` values below are only used as initial defaults.
 
 | Key | Default | Description |
 | :--- | :--- | :--- |
