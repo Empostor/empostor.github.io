@@ -40,15 +40,27 @@ Empostor 附带多个演示插件 API 的插件：
 | **留言系统** | 通过好友代码给玩家离线留言。收件人加入时自动投递。 | [留言插件](Message-plugin.md) |
 | **玩家频道** | 基于好友代码的跨游戏聊天频道。可在不同房间中与好友沟通。 | [玩家频道](Player-channel-plugin.md) |
 | **聊天管理** | 记录所有游戏内聊天，并对玩家和房主强制执行可配置的消息长度限制。 | [聊天管理](Chat-plugin.md) |
+| **地图投票** | 玩家使用聊天命令投票选择下一张地图。最受欢迎的地图自动被选中。 | [地图投票](MapVote-plugin.md) |
+| **旁白** | 会议期间的 AI 驱动战略顾问。使用 DeepSeek AI 提供上下文建议。 | [旁白](Narrator-plugin.md) |
+| **玩家统计** | 跟踪每个玩家的持久游戏统计：胜场、击杀、任务等。 | [玩家统计](PlayerStats-plugin.md) |
+| **欢迎消息** | 支持占位符、远程内容和随机选择的本地化欢迎消息。 | [欢迎消息](Welcome-plugin.md) |
+| **称号系统** | 通过好友代码为玩家分配显示称号前缀。支持配置或 API 的一次性称号。 | [称号系统](Titles-plugin.md) |
+| **QQ 验证** | QQ 号码验证，用于将游戏账户关联到 QQ 账户。 | [QQ 验证](QqVerify-plugin.md) |
+| **好友代码验证** | 根据格式模式和内置词典验证好友代码。 | [好友代码验证](FriendCodeValidator-plugin.md) |
+| **服务器监控** | 用于健康检查和状态监控的 HTTP API 端点。 | [服务器监控](Monitor-plugin.md) |
+| **隐私政策** | 通过管理 API 服务和管理可配置的隐私政策页面。 | [隐私政策](Privacy-plugin.md) |
+| **Discord 通知** | 通过 Webhook 将游戏事件发送到 Discord 频道。 | [Discord 通知](Discord-webhook.md) |
+| **聊天过滤** | 过滤游戏聊天中的屏蔽词和刷屏限速。 | [聊天过滤](Admin-panel.md#聊天过滤) |
+| **固定房间代码** | 通过好友代码为特定玩家分配固定的房间代码。 | [Boot.Codes](Boot-code.md#fixedcode-插件) |
+| **示例** | 展示完整 Empostor 插件 API 的演示插件。 | [编写插件](Writing-a-plugin.md) |
 
 ---
 
 ## 插件市场
 
-**[插件市场](Admin-panel.md#插件市场)** 允许服务器管理员从管理面板浏览和安装插件。了解 `plugins.json` 格式以发布你自己的插件：
+**[插件市场](Admin-panel.md#插件市场)** 允许管理员从管理面板浏览和安装插件。了解 `plugins.json` 格式以发布你自己的插件：
 
 - 插件元数据（id、name、description、author）
 - 带下载 URL 的版本历史
 - 最低 Empostor 版本要求
 - 管理界面中带版本选择器的多版本支持
-

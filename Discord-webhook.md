@@ -4,7 +4,7 @@ Empostor can send game events to a Discord channel via [webhooks](https://suppor
 
 Events are split into two categories, each with its own webhook URL:
 
-- **Matchmaker** — game lifecycle events (Game Created, Game Started, Game Ended, Player Joined)
+- **Matchmaker** — game lifecycle events (Game Created, Game Started, Game Ended, Game Destroyed)
 - **Admin** — moderation events (Player Banned, Player Reported)
 
 This feature is **disabled by default**. Configure it via the **Admin Panel** (Discord tab) or by setting initial defaults in `config.json`.
@@ -26,7 +26,7 @@ Add the `DiscordWebhook` section to your `config.json` for initial defaults:
 
 | Key | Default | Description |
 | :--- | :--- | :--- |
-| **MatchmakerUrl** | `""` | Discord webhook URL for matchmaker events (Game Created, Game Started, Game Ended, Player Joined). Leave empty to disable. |
+| **MatchmakerUrl** | `""` | Discord webhook URL for matchmaker events (Game Created, Game Started, Game Ended, Game Destroyed). Leave empty to disable. |
 | **AdminUrl** | `""` | Discord webhook URL for admin/moderation events (Player Banned, Player Reported). Leave empty to disable. |
 
 > **Tip**: You can point both URLs to the same webhook if you want all events in one channel, or use different channels for matchmaker and admin notifications.
@@ -39,10 +39,10 @@ Each notification is sent as a Discord embed with a colored sidebar:
 
 | Event | Embed Color | Fields |
 | :--- | :--- | :--- |
-| Game Created | Green | Game code, host name, host friend code |
+| Game Created | Green | Game code, host name, host friend code, map, player count, impostor count, note |
 | Game Started | Blurple | Game code, map, player count, impostor count |
-| Player Joined | Green | Player name, friend code, game code, player count |
 | Game Ended | Purple | Game code, result, player count |
+| Game Destroyed | Gray | Game code |
 
 ### Admin Events
 

@@ -62,11 +62,30 @@ This plugin requires no configuration file. Just create the `Boot.Codes/` folder
 
 ## FixedCode Plugin
 
-There is also a companion plugin **Empostor.Plugins.FixedCode** (`cn.hayashiume.fixedcode`) that allows setting a single fixed game code via configuration. This is useful for private servers that always use the same code.
+There is also a companion plugin **Empostor.Plugins.FixedCode** (`cn.Empostor.fixedcode`) that assigns fixed/predictable room codes to specific players based on their friend code. When a player with a configured friend code creates a game, they receive the assigned room code.
+
+Room codes must be **4 or 6 uppercase letters** (A–Z only).
+
+Configuration is stored in `[Fixed Room Code]Config.json`:
 
 ```json
-// config/FixedCode.json
 {
-  "code": "MYCODE"
+  "mappings": [
+    {
+      "friendCode": "kami#1337",
+      "roomCode": "DUCK"
+    },
+    {
+      "friendCode": "player#5678",
+      "roomCode": "HELLO"
+    }
+  ]
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `friendCode` | string | The player's friend code |
+| `roomCode` | string | The fixed room code (4 or 6 uppercase letters) |
+
+Multiple mappings are supported. If a player's friend code is not in the mapping, they receive a normal random code.

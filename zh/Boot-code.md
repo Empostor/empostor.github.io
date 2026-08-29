@@ -62,11 +62,30 @@ WHALE
 
 ## FixedCode 插件
 
-还有一个配套插件 **Empostor.Plugins.FixedCode**（`cn.hayashiume.fixedcode`），允许通过配置设置一个固定的游戏代码。适用于始终使用相同代码的私服。
+还有一个配套插件 **Empostor.Plugins.FixedCode**（`cn.Empostor.fixedcode`），通过好友代码为特定玩家分配固定的房间代码。当拥有配置好友代码的玩家创建游戏时，他们会获得分配的房间代码。
+
+房间代码必须是 **4 或 6 个大写字母**（仅限 A–Z）。
+
+配置存储在 `[Fixed Room Code]Config.json` 中：
 
 ```json
-// config/FixedCode.json
 {
-  "code": "MYCODE"
+  "mappings": [
+    {
+      "friendCode": "kami#1337",
+      "roomCode": "DUCK"
+    },
+    {
+      "friendCode": "player#5678",
+      "roomCode": "HELLO"
+    }
+  ]
 }
 ```
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `friendCode` | string | 玩家的好友代码 |
+| `roomCode` | string | 固定的房间代码（4 或 6 个大写字母） |
+
+支持多个映射。如果玩家的好友代码不在映射中，他们会获得正常的随机代码。

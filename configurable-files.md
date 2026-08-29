@@ -28,7 +28,7 @@ The main server configuration file. See [Server Configuration](Server-configurat
   "Compatibility": { "AllowFutureGameVersions": false, ... },
   "Debug": { "GameRecorderEnabled": false, "GameRecorderPath": "" },
   "Admin": { "Password": "CHANGE-ME", "MarketplaceUrl": "..." },
-  "DiscordWebhook": { "Enabled": false, "WebhookUrl": "", ... },
+  "DiscordWebhook": { "MatchmakerUrl": "", "AdminUrl": "" },
   "PlayerStats": { "Enabled": false, "PersistToFile": true },
   "ChatFilter": { "Enabled": false, "BlockedWords": [], ... },
   "AuthApi": {

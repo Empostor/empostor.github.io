@@ -28,18 +28,18 @@
 
 ## 配置
 
-频道在 `config/PlayerChannel.json` 中定义：
+频道在插件配置中定义：
 
 ```json
 {
   "channels": [
     {
       "name": "friends",
-      "members": ["FriendA#1234", "FriendB#5678", "FriendC#9012"]
+      "friendCodes": ["FriendA#1234", "FriendB#5678", "FriendC#9012"]
     },
     {
       "name": "clan",
-      "members": ["Leader#0001", "Member1#0002", "Member2#0003"]
+      "friendCodes": ["Leader#0001", "Member1#0002", "Member2#0003"]
     }
   ]
 }
@@ -48,7 +48,7 @@
 | 字段 | 说明 |
 |---|---|
 | `name` | 频道名称（用于日志） |
-| `members` | 属于该频道的好友代码列表 |
+| `friendCodes` | 属于该频道的好友代码列表 |
 
 ## 多语言支持
 

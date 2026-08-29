@@ -28,18 +28,18 @@ Sends a message to all other players in your configured channel.
 
 ## Configuration
 
-Channels are defined in `config/PlayerChannel.json`:
+Channels are defined in the plugin configuration:
 
 ```json
 {
   "channels": [
     {
       "name": "friends",
-      "members": ["FriendA#1234", "FriendB#5678", "FriendC#9012"]
+      "friendCodes": ["FriendA#1234", "FriendB#5678", "FriendC#9012"]
     },
     {
       "name": "clan",
-      "members": ["Leader#0001", "Member1#0002", "Member2#0003"]
+      "friendCodes": ["Leader#0001", "Member1#0002", "Member2#0003"]
     }
   ]
 }
@@ -48,7 +48,7 @@ Channels are defined in `config/PlayerChannel.json`:
 | Field | Description |
 |---|---|
 | `name` | Channel name (for logging) |
-| `members` | List of friend codes that belong to this channel |
+| `friendCodes` | List of friend codes that belong to this channel |
 
 ## Translations
 

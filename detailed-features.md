@@ -22,6 +22,9 @@ The **[Admin Panel](Admin-panel.md)** is a built-in web interface at `http://you
 | Player Logs | Browse per-player activity logs |
 | Statistics | Track per-player game statistics |
 | Chat Filter | Configure blocked words and spam protection |
+| Discord Webhook | Configure Discord notification webhooks |
+| HPLP | Configure Starlight client discovery |
+| Title System | Manage player title prefixes |
 
 ---
 
@@ -39,7 +42,67 @@ The **[Admin Panel](Admin-panel.md)** is a built-in web interface at `http://you
 
 ## Player Statistics
 
-**[Statistics](Admin-panel.md#statistics)** tracks per-player game data: wins, losses, impostor wins, kills, deaths, tasks completed, and more. Viewable in the admin panel and via `/stat` command.
+**[Player Statistics](PlayerStats-plugin.md)** tracks per-player game data: wins, losses, impostor wins, kills, deaths, tasks completed, and more. Viewable in the admin panel and via `#stat` command.
+
+---
+
+## Server Monitoring
+
+**[Server Monitor](Monitor-plugin.md)** provides HTTP API endpoints for health checks and status dashboards. Useful for external monitoring tools and load balancers.
+
+---
+
+## Privacy Policy
+
+**[Privacy Policy](Privacy-plugin.md)** serves a configurable privacy policy page and provides an admin API to update it. Useful for servers that need to comply with privacy regulations.
+
+---
+
+## Map Vote
+
+**[Map Vote](MapVote-plugin.md)** lets players vote for the next map during a game using chat commands. The map with the most votes is automatically selected.
+
+---
+
+## Narrator (AI Advisor)
+
+**[Narrator](Narrator-plugin.md)** provides an AI-powered strategic advisor during meetings. Players can ask the AI for contextual advice based on their role, game state, and chat history.
+
+---
+
+## Title System
+
+**[Title System](Titles-plugin.md)** assigns display title prefixes (e.g., `[Empostor]`) to specific players by friend code. Titles can be added via config, admin panel, or HTTP API.
+
+---
+
+## Welcome Messages
+
+**[Welcome Messages](Welcome-plugin.md)** sends localized welcome messages to players when they join a lobby. Supports 16 languages, placeholders, remote URL content, and random message selection.
+
+---
+
+## Player Channel
+
+**[Player Channel](Player-channel-plugin.md)** provides cross-game chat channels based on friend codes. Communicate with friends across different lobbies.
+
+---
+
+## Message System
+
+**[Message System](Message-plugin.md)** lets players leave offline messages for each other by friend code. Messages are delivered when the recipient joins.
+
+---
+
+## QQ Verify
+
+**[QQ Verify](QqVerify-plugin.md)** provides a QQ number verification system for linking in-game accounts to QQ accounts for community management.
+
+---
+
+## Friend Code Validator
+
+**[Friend Code Validator](FriendCodeValidator-plugin.md)** validates player friend codes against a format pattern and a built-in dictionary of safe words.
 
 ---
 
