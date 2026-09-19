@@ -1,16 +1,163 @@
 import { defineConfig } from 'vitepress'
+import fs from 'node:fs'
+import path from 'node:path'
+
+/**
+ * Legacy URL -> new URL. Every path that existed before the IA rework keeps
+ * working so existing links (and GitHub README) don't 404.
+ */
+const LEGACY = {
+  '/': '/',
+  '/README': '/',
+  '/configure-server': '/get-started/',
+  '/Running-the-server': '/get-started/installation',
+  '/Server-configuration': '/get-started/configuration',
+  '/Building-from-source': '/get-started/build-from-source',
+  '/Http-server': '/get-started/reverse-proxy',
+  '/Firewall-and-ports': '/get-started/firewall-and-ports',
+  '/detailed-features': '/server/',
+  '/Admin-panel': '/server/admin-panel',
+  '/Hello-page': '/server/hello-page',
+  '/write-plugin': '/develop/',
+  '/Writing-a-plugin': '/develop/writing-a-plugin',
+  '/api-reference': '/reference/',
+  '/Server-monitoring': '/reference/monitor-api',
+  '/Privacy-api': '/reference/privacy-api',
+  '/Game-api': '/reference/game-listing-api',
+  '/Hplp-server-list': '/reference/hplp',
+  '/configurable-files': '/config-files/',
+  '/FAQ': '/operations/faq',
+  '/TROUBLESHOOTING': '/operations/troubleshooting',
+  '/About': '/about',
+  '/Chat-plugin': '/plugins/chat-manager',
+  '/Boot-code': '/plugins/custom-game-codes',
+  '/Welcome-plugin': '/plugins/welcome-messages',
+  '/Titles-plugin': '/plugins/custom-title',
+  '/Player-channel-plugin': '/plugins/player-channel',
+  '/Message-plugin': '/plugins/leave-a-message',
+  '/Discord-webhook': '/plugins/discord-webhook',
+  '/Narrator-plugin': '/plugins/narrator',
+  '/MapVote-plugin': '/plugins/map-vote',
+  '/QqVerify-plugin': '/plugins/qq-verify',
+  '/FriendCodeValidator-plugin': '/plugins/friend-code-validator',
+  '/PlayerStats-plugin': '/plugins/player-stats',
+  '/Monitor-plugin': '/plugins/monitor',
+  '/Privacy-plugin': '/plugins/privacy-policy',
+}
+
+// anchor-only "pages" that became real pages
+const LEGACY_ANCHORS = {
+  '/Admin-panel#chat-filter': '/plugins/chat-filter',
+  '/Admin-panel#statistics': '/server/statistics',
+  '/Admin-panel#plugin-marketplace': '/server/plugin-marketplace',
+  '/api-reference#verification-api': '/reference/verification-api',
+  '/configurable-files#adminstrings-json': '/config-files/#adminstrings-json',
+  '/configurable-files#bans-json': '/config-files/#bans-json',
+  '/configurable-files#player-stats-json': '/config-files/#player-stats-json',
+  '/configurable-files#marketplace-plugins-json': '/config-files/#marketplace-plugins-json',
+  '/configurable-files#pages-index-html-hello-page': '/config-files/#pages-index-html-hello-page',
+  '/configurable-files#messages-helloworld-txt': '/config-files/#messages-helloworld-txt',
+}
+
+/**
+ * Builds clean-path -> { target, hashMap }. The `hash` half of a legacy URL is
+ * never sent to the server, so anchor remapping has to happen client-side in
+ * the generated shim.
+ */
+function buildRedirectTree(prefix) {
+  const tree = {}
+  for (const [from, to] of Object.entries(LEGACY)) {
+    tree[prefix + from] = { target: prefix + (to === '/' ? '/' : to), hash: {} }
+  }
+  for (const [from, to] of Object.entries(LEGACY_ANCHORS)) {
+    const [base, hash] = from.split('#')
+    const key = prefix + base
+    if (!tree[key]) {
+      tree[key] = { target: prefix + to, hash: {} }
+    }
+    tree[key].hash[hash] = prefix + to
+  }
+  return tree
+}
+
+const REDIRECT_TREE = { ...buildRedirectTree(''), ...buildRedirectTree('/zh') }
+
+function redirectHtml(entry) {
+  const url = entry.target.replace(/"/g, '&quot;')
+  const map = JSON.stringify(entry.hash).replace(/</g, '\\u003c')
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redirecting…</title>
+<meta http-equiv="refresh" content="0; url=${url}">
+<link rel="canonical" href="${url}">
+<script>
+(function () {
+  var map = ${map};
+  var target = "${url}";
+  try {
+    var h = decodeURIComponent(location.hash.replace(/^#/, ''));
+    if (h && map[h]) target = map[h];
+  } catch (e) {}
+  location.replace(target);
+})();
+</script>
+</head>
+<body>
+<p>Redirecting to <a href="${url}">${url}</a></p>
+</body>
+</html>
+`
+}
+
+/** Writes static HTML shims for removed URLs at the end of the build. */
+function legacyRedirects() {
+  let outDir
+  return {
+    name: 'empostor-legacy-redirects',
+    apply: 'build',
+    enforce: 'post',
+    configResolved(cfg) {
+      outDir = cfg.build.outDir && path.isAbsolute(cfg.build.outDir)
+        ? cfg.build.outDir
+        : path.resolve(cfg.root, cfg.build.outDir)
+    },
+    writeBundle() {
+      if (!outDir) return
+      for (const [clean, entry] of Object.entries(REDIRECT_TREE)) {
+        const dir = path.join(outDir, clean)
+        fs.mkdirSync(dir, { recursive: true })
+        fs.writeFileSync(path.join(dir, 'index.html'), redirectHtml(entry), 'utf8')
+      }
+    },
+  }
+}
+
+const footer = {
+  message:
+    '<a href="https://dsc.gg/empostor" target="_blank">Discord</a> | ' +
+    '<a href="https://qm.qq.com/q/GeX3Q0Ft0k" target="_blank">QQ 群</a> | ' +
+    '<a href="https://github.com/Empostor/Empostor" target="_blank">GitHub</a>',
+  copyright: 'Empostor ©2026',
+}
 
 export default defineConfig({
   title: 'Empostor',
   description: 'Among Us Private Server Documentation',
 
   base: '/',
-
+  srcDir: 'pages',
   cleanUrls: true,
 
-  head: [
-    ['link', { rel: 'icon', href: '/favicon.png' }]
-  ],
+  head: [['link', { rel: 'icon', href: '/favicon.png' }]],
+
+  themeConfig: {
+    search: { provider: 'local' },
+    socialLinks: [{ icon: 'github', link: 'https://github.com/Empostor/Empostor' }],
+  },
+
+  vite: { plugins: [legacyRedirects()], build: { emptyOutDir: false } },
 
   locales: {
     root: {
@@ -19,104 +166,135 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Home', link: '/' },
+          { text: 'Get Started', link: '/get-started/' },
+          { text: 'Plugins', link: '/plugins/' },
+          { text: 'API', link: '/reference/' },
           { text: 'Empostor Tool', link: '/empostor/' },
-          { text: 'GitHub', link: 'https://github.com/Empostor/Empostor' }
+          { text: 'GitHub', link: 'https://github.com/Empostor/Empostor' },
         ],
 
         sidebar: [
           {
-            text: 'Configure Server',
-            link: '/configure-server',
+            text: 'Get Started',
+            link: '/get-started/',
+            collapsed: false,
             items: [
-              { text: 'Running the Server', link: '/Running-the-server' },
-              { text: 'Server Configuration', link: '/Server-configuration' },
-              { text: 'Building from Source', link: '/Building-from-source' },
-              { text: 'HTTP Server (Reverse Proxy)', link: '/Http-server' },
-              { text: 'Firewall & Ports', link: '/Firewall-and-ports' },
-              { text: 'FAQ', link: '/FAQ' },
-              { text: 'Troubleshooting', link: '/TROUBLESHOOTING' }
-            ]
+              { text: 'Installation', link: '/get-started/installation' },
+              { text: 'Connect a Client', link: '/get-started/client-setup' },
+              { text: 'Server Configuration', link: '/get-started/configuration' },
+              { text: 'HTTPS & Reverse Proxy', link: '/get-started/reverse-proxy' },
+              { text: 'Firewall & Ports', link: '/get-started/firewall-and-ports' },
+              { text: 'Build from Source', link: '/get-started/build-from-source' },
+            ],
           },
           {
-            text: 'Detailed Features',
-            link: '/detailed-features',
+            text: 'Plugins',
+            link: '/plugins/',
+            collapsed: false,
             items: [
-              { text: 'Admin Panel', link: '/Admin-panel' },
-              { text: 'Chat Filter', link: '/Admin-panel#chat-filter' },
-              { text: 'Discord Webhook', link: '/Discord-webhook' },
-              { text: 'Statistics', link: '/Admin-panel#statistics' },
-              { text: 'Plugin Marketplace', link: '/Admin-panel#plugin-marketplace' },
-              { text: 'Server Monitor', link: '/Monitor-plugin' },
-              { text: 'Privacy Policy', link: '/Privacy-plugin' },
-              { text: 'Map Vote', link: '/MapVote-plugin' },
-              { text: 'Narrator (AI)', link: '/Narrator-plugin' },
-              { text: 'Title System', link: '/Titles-plugin' },
-              { text: 'Welcome Messages', link: '/Welcome-plugin' },
-              { text: 'QQ Verify', link: '/QqVerify-plugin' },
-              { text: 'Friend Code Validator', link: '/FriendCodeValidator-plugin' },
-              { text: 'Player Statistics', link: '/PlayerStats-plugin' }
-            ]
+              {
+                text: 'Communication',
+                collapsed: true,
+                items: [
+                  { text: 'Chat Manager', link: '/plugins/chat-manager' },
+                  { text: 'Chat Filter', link: '/plugins/chat-filter' },
+                  { text: 'Welcome Messages', link: '/plugins/welcome-messages' },
+                  { text: 'Custom Title', link: '/plugins/custom-title' },
+                ],
+              },
+              {
+                text: 'Rooms & Gameplay',
+                collapsed: true,
+                items: [
+                  { text: 'Custom Game Codes', link: '/plugins/custom-game-codes' },
+                  { text: 'Fixed Room Code', link: '/plugins/fixed-room-code' },
+                  { text: 'Map Vote', link: '/plugins/map-vote' },
+                ],
+              },
+              {
+                text: 'Social',
+                collapsed: true,
+                items: [
+                  { text: 'Player Channel', link: '/plugins/player-channel' },
+                  { text: 'Leave a Message', link: '/plugins/leave-a-message' },
+                  { text: 'Narrator (AI)', link: '/plugins/narrator' },
+                ],
+              },
+              {
+                text: 'Identity & Verification',
+                collapsed: true,
+                items: [
+                  { text: 'Friend Code Validator', link: '/plugins/friend-code-validator' },
+                  { text: 'QQ Verify', link: '/plugins/qq-verify' },
+                ],
+              },
+              {
+                text: 'Ops & Data',
+                collapsed: true,
+                items: [
+                  { text: 'Monitor', link: '/plugins/monitor' },
+                  { text: 'Player Log', link: '/plugins/player-log' },
+                  { text: 'Player Stats', link: '/plugins/player-stats' },
+                  { text: 'Privacy Policy', link: '/plugins/privacy-policy' },
+                ],
+              },
+              {
+                text: 'Integrations',
+                collapsed: true,
+                items: [{ text: 'Discord Webhook', link: '/plugins/discord-webhook' }],
+              },
+            ],
           },
           {
-            text: 'Write Plugin',
-            link: '/write-plugin',
+            text: 'Server Features',
+            link: '/server/',
+            collapsed: true,
             items: [
-              { text: 'Writing a Plugin', link: '/Writing-a-plugin' },
-              { text: 'Hello Page', link: '/Hello-page' },
-              { text: 'Boot.Codes', link: '/Boot-code' },
-              { text: 'Message (Leave a Message)', link: '/Message-plugin' },
-              { text: 'Player Channel', link: '/Player-channel-plugin' },
-              { text: 'Chat Manager', link: '/Chat-plugin' },
-              { text: 'Map Vote', link: '/MapVote-plugin' },
-              { text: 'Narrator (AI)', link: '/Narrator-plugin' },
-              { text: 'Player Statistics', link: '/PlayerStats-plugin' },
-              { text: 'Welcome Messages', link: '/Welcome-plugin' },
-              { text: 'Title System', link: '/Titles-plugin' },
-              { text: 'QQ Verify', link: '/QqVerify-plugin' },
-              { text: 'Friend Code Validator', link: '/FriendCodeValidator-plugin' },
-              { text: 'Server Monitor', link: '/Monitor-plugin' },
-              { text: 'Privacy Policy', link: '/Privacy-plugin' }
-            ]
+              { text: 'Admin Panel', link: '/server/admin-panel' },
+              { text: 'Statistics', link: '/server/statistics' },
+              { text: 'Plugin Marketplace', link: '/server/plugin-marketplace' },
+              { text: 'Hello Page', link: '/server/hello-page' },
+            ],
+          },
+          {
+            text: 'Develop Plugins',
+            link: '/develop/',
+            collapsed: true,
+            items: [
+              { text: 'Writing a Plugin', link: '/develop/writing-a-plugin' },
+              { text: 'Example Plugin', link: '/develop/example-plugin' },
+            ],
           },
           {
             text: 'API Reference',
-            link: '/api-reference',
+            link: '/reference/',
+            collapsed: true,
             items: [
-              { text: 'Server Monitoring', link: '/Server-monitoring' },
-              { text: 'Privacy Policy API', link: '/Privacy-api' },
-              { text: 'Game Listing API', link: '/Game-api' },
-              { text: 'Verification API', link: '/api-reference#verification-api' }
-            ]
+              { text: 'Monitor API', link: '/reference/monitor-api' },
+              { text: 'Commands', link: '/reference/commands' },
+              { text: 'Privacy Policy API', link: '/reference/privacy-api' },
+              { text: 'Game Listing API', link: '/reference/game-listing-api' },
+              { text: 'Verification API', link: '/reference/verification-api' },
+              { text: 'Admin API', link: '/reference/admin-api' },
+              { text: 'HPLP Server List', link: '/reference/hplp' },
+            ],
           },
           {
-            text: 'Configurable Files',
-            link: '/configurable-files',
+            text: 'Reference',
+            collapsed: true,
             items: [
-              { text: 'config.json', link: '/Server-configuration' },
-              { text: 'AdminStrings.json', link: '/configurable-files#adminstrings-json' },
-              { text: 'Pages/index.html', link: '/configurable-files#pages-index-html-hello-page' },
-              { text: 'Messages/HelloWorld.txt', link: '/configurable-files#messages-helloworld-txt' },
-              { text: 'marketplace/plugins.json', link: '/configurable-files#marketplace-plugins-json' },
-              { text: 'bans.json', link: '/configurable-files#bans-json' },
-              { text: 'player_stats.json', link: '/configurable-files#player-stats-json' }
-            ]
+              { text: 'Configurable Files', link: '/config-files/' },
+              { text: 'FAQ', link: '/operations/faq' },
+              { text: 'Troubleshooting', link: '/operations/troubleshooting' },
+              { text: 'About', link: '/about' },
+            ],
           },
-          {
-            text: 'About',
-            link: '/About'
-          }
         ],
 
-        socialLinks: [
-          { icon: 'github', link: 'https://github.com/Empostor/Empostor' }
-        ],
-
-        footer: {
-          message: '<a href="https://dsc.gg/empostor" target="_blank">Discord</a> | <a href="https://qm.qq.com/q/GeX3Q0Ft0k" target="_blank">QQ 群</a> | <a href="https://github.com/Empostor/Empostor" target="_blank">GitHub</a>',
-          copyright: 'Empostor ©2026'
-        }
-      }
+        footer,
+      },
     },
+
     zh: {
       label: '简体中文',
       lang: 'zh-CN',
@@ -124,109 +302,133 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: '首页', link: '/zh/' },
-          { text: 'Empostor Tool', link: '/empostor/' },
-          { text: 'GitHub', link: 'https://github.com/Empostor/Empostor' }
+          { text: '快速开始', link: '/zh/get-started/' },
+          { text: '插件', link: '/zh/plugins/' },
+          { text: 'API', link: '/zh/reference/' },
+          { text: 'Empostor 工具', link: '/empostor/' },
+          { text: 'GitHub', link: 'https://github.com/Empostor/Empostor' },
         ],
 
         sidebar: [
           {
-            text: '配置服务器',
-            link: '/zh/configure-server',
+            text: '快速开始',
+            link: '/zh/get-started/',
+            collapsed: false,
             items: [
-              { text: '运行服务器', link: '/zh/Running-the-server' },
-              { text: '服务器配置', link: '/zh/Server-configuration' },
-              { text: '从源码构建', link: '/zh/Building-from-source' },
-              { text: 'HTTP 服务器 (反向代理)', link: '/zh/Http-server' },
-              { text: '防火墙与端口', link: '/zh/Firewall-and-ports' },
-              { text: '常见问题', link: '/zh/FAQ' },
-              { text: '故障排除', link: '/zh/TROUBLESHOOTING' }
-            ]
+              { text: '安装部署', link: '/zh/get-started/installation' },
+              { text: '接入客户端', link: '/zh/get-started/client-setup' },
+              { text: '服务器配置', link: '/zh/get-started/configuration' },
+              { text: 'HTTPS 与反向代理', link: '/zh/get-started/reverse-proxy' },
+              { text: '防火墙与端口', link: '/zh/get-started/firewall-and-ports' },
+              { text: '从源码构建', link: '/zh/get-started/build-from-source' },
+            ],
           },
           {
-            text: '详细功能',
-            link: '/zh/detailed-features',
+            text: '插件',
+            link: '/zh/plugins/',
+            collapsed: false,
             items: [
-              { text: '管理面板', link: '/zh/Admin-panel' },
-              { text: '聊天过滤', link: '/zh/Admin-panel#聊天过滤' },
-              { text: 'Discord 通知', link: '/zh/Discord-webhook' },
-              { text: '统计', link: '/zh/Admin-panel#统计' },
-              { text: '插件市场', link: '/zh/Admin-panel#插件市场' },
-              { text: '服务器监控', link: '/zh/Monitor-plugin' },
-              { text: '隐私政策', link: '/zh/Privacy-plugin' },
-              { text: '地图投票', link: '/zh/MapVote-plugin' },
-              { text: '旁白 (AI)', link: '/zh/Narrator-plugin' },
-              { text: '称号系统', link: '/zh/Titles-plugin' },
-              { text: '欢迎消息', link: '/zh/Welcome-plugin' },
-              { text: 'QQ 验证', link: '/zh/QqVerify-plugin' },
-              { text: '好友代码验证', link: '/zh/FriendCodeValidator-plugin' },
-              { text: '玩家统计', link: '/zh/PlayerStats-plugin' }
-            ]
+              {
+                text: '聊天沟通',
+                collapsed: true,
+                items: [
+                  { text: '聊天管理', link: '/zh/plugins/chat-manager' },
+                  { text: '聊天过滤', link: '/zh/plugins/chat-filter' },
+                  { text: '欢迎消息', link: '/zh/plugins/welcome-messages' },
+                  { text: '自定义称号', link: '/zh/plugins/custom-title' },
+                ],
+              },
+              {
+                text: '房间与玩法',
+                collapsed: true,
+                items: [
+                  { text: '自定义房间代码', link: '/zh/plugins/custom-game-codes' },
+                  { text: '固定房间代码', link: '/zh/plugins/fixed-room-code' },
+                  { text: '地图投票', link: '/zh/plugins/map-vote' },
+                ],
+              },
+              {
+                text: '社交互动',
+                collapsed: true,
+                items: [
+                  { text: '玩家频道', link: '/zh/plugins/player-channel' },
+                  { text: '留言系统', link: '/zh/plugins/leave-a-message' },
+                  { text: '旁白 AI', link: '/zh/plugins/narrator' },
+                ],
+              },
+              {
+                text: '身份校验',
+                collapsed: true,
+                items: [
+                  { text: '好友代码验证', link: '/zh/plugins/friend-code-validator' },
+                  { text: 'QQ 群验证', link: '/zh/plugins/qq-verify' },
+                ],
+              },
+              {
+                text: '运维与数据',
+                collapsed: true,
+                items: [
+                  { text: '服务器监控', link: '/zh/plugins/monitor' },
+                  { text: '玩家日志', link: '/zh/plugins/player-log' },
+                  { text: '玩家统计', link: '/zh/plugins/player-stats' },
+                  { text: '隐私政策', link: '/zh/plugins/privacy-policy' },
+                ],
+              },
+              {
+                text: '外部集成',
+                collapsed: true,
+                items: [{ text: 'Discord 通知', link: '/zh/plugins/discord-webhook' }],
+              },
+            ],
           },
           {
-            text: '编写插件',
-            link: '/zh/write-plugin',
+            text: '服务端功能',
+            link: '/zh/server/',
+            collapsed: true,
             items: [
-              { text: '编写插件', link: '/zh/Writing-a-plugin' },
-              { text: 'Hello 页面', link: '/zh/Hello-page' },
-              { text: 'Boot.Codes', link: '/zh/Boot-code' },
-              { text: '留言系统', link: '/zh/Message-plugin' },
-              { text: '玩家频道', link: '/zh/Player-channel-plugin' },
-              { text: '聊天管理', link: '/zh/Chat-plugin' },
-              { text: '地图投票', link: '/zh/MapVote-plugin' },
-              { text: '旁白 (AI)', link: '/zh/Narrator-plugin' },
-              { text: '玩家统计', link: '/zh/PlayerStats-plugin' },
-              { text: '欢迎消息', link: '/zh/Welcome-plugin' },
-              { text: '称号系统', link: '/zh/Titles-plugin' },
-              { text: 'QQ 验证', link: '/zh/QqVerify-plugin' },
-              { text: '好友代码验证', link: '/zh/FriendCodeValidator-plugin' },
-              { text: '服务器监控', link: '/zh/Monitor-plugin' },
-              { text: '隐私政策', link: '/zh/Privacy-plugin' }
-            ]
+              { text: '管理面板', link: '/zh/server/admin-panel' },
+              { text: '统计分析', link: '/zh/server/statistics' },
+              { text: '插件市场', link: '/zh/server/plugin-marketplace' },
+              { text: 'Hello 页面', link: '/zh/server/hello-page' },
+            ],
           },
           {
-            text: '相关 API',
-            link: '/zh/api-reference',
+            text: '开发插件',
+            link: '/zh/develop/',
+            collapsed: true,
             items: [
-              { text: '服务器监控', link: '/zh/Server-monitoring' },
-              { text: '隐私政策 API', link: '/zh/Privacy-api' },
-              { text: '游戏列表 API', link: '/zh/Game-api' },
-              { text: '验证 API', link: '/zh/api-reference#验证-api' }
-            ]
+              { text: '编写插件', link: '/zh/develop/writing-a-plugin' },
+              { text: '示例插件', link: '/zh/develop/example-plugin' },
+            ],
           },
           {
-            text: '可配置文件',
-            link: '/zh/configurable-files',
+            text: 'API 参考',
+            link: '/zh/reference/',
+            collapsed: true,
             items: [
-              { text: 'config.json', link: '/zh/Server-configuration' },
-              { text: 'AdminStrings.json', link: '/zh/configurable-files#adminstrings-json' },
-              { text: 'Pages/index.html', link: '/zh/configurable-files#pages-index-html-hello-页面' },
-              { text: 'Messages/HelloWorld.txt', link: '/zh/configurable-files#messages-helloworld-txt' },
-              { text: 'marketplace/plugins.json', link: '/zh/configurable-files#marketplace-plugins-json' },
-              { text: 'bans.json', link: '/zh/configurable-files#bans-json' },
-              { text: 'player_stats.json', link: '/zh/configurable-files#player-stats-json' }
-            ]
+              { text: '监控 API', link: '/zh/reference/monitor-api' },
+              { text: '指令参考', link: '/zh/reference/commands' },
+              { text: '隐私政策 API', link: '/zh/reference/privacy-api' },
+              { text: '游戏列表 API', link: '/zh/reference/game-listing-api' },
+              { text: '验证 API', link: '/zh/reference/verification-api' },
+              { text: '管理 API', link: '/zh/reference/admin-api' },
+              { text: 'HPLP 服务器列表', link: '/zh/reference/hplp' },
+            ],
           },
           {
-            text: '关于',
-            link: '/zh/About'
-          }
+            text: '参考资料',
+            collapsed: true,
+            items: [
+              { text: '可配置文件', link: '/zh/config-files/' },
+              { text: '常见问题', link: '/zh/operations/faq' },
+              { text: '故障排除', link: '/zh/operations/troubleshooting' },
+              { text: '关于', link: '/zh/about' },
+            ],
+          },
         ],
 
-        socialLinks: [
-          { icon: 'github', link: 'https://github.com/Empostor/Empostor' }
-        ],
-
-        footer: {
-          message: '<a href="https://dsc.gg/empostor" target="_blank">Discord</a> | <a href="https://qm.qq.com/q/GeX3Q0Ft0k" target="_blank">QQ 群</a> | <a href="https://github.com/Empostor/Empostor" target="_blank">GitHub</a>',
-          copyright: 'Empostor ©2026'
-        }
-      }
-    }
+        footer,
+      },
+    },
   },
-
-  themeConfig: {
-    search: {
-      provider: 'local'
-    }
-  }
 })

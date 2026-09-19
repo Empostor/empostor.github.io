@@ -431,3 +431,12 @@ FodyWeavers.xsd
 # VitePress
 .vitepress/dist/
 .vitepress/cache/
+
+# VitePress build output
+.vitepress/dist
+.vitepress/cache
+
+.vitepress/.temp
+
+# VitePress compiled config cache
+*.timestamp-*.mjs
