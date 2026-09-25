@@ -201,6 +201,8 @@ Modify the following template to your needs and populate the service file.
 ```
 [Unit]
 Description=Empostor private Among Us server - https://github.com/Empostor/Empostor
+# Wait until most system services have started before starting Empostor
+After=multi-user.target
 
 [Service]
 # Directory where Empostor is installed
@@ -219,8 +221,6 @@ Group=empostor
 TimeoutStopSec=10
 
 [Install]
-# Wait until most system services have started before starting Empostor
-After=multi-user.target
 WantedBy=multi-user.target
 ```
 
