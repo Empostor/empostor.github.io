@@ -47,8 +47,13 @@ https://dotnet.microsoft.com/download
 
 ### 快速安装
 
-安装 `Empostor.Api` NuGet 包。  
-如果你在为开发版服务器编写插件，请确保获取预发布版本。
+安装 [`Empostor.Api`](https://www.nuget.org/packages/Empostor.Api) NuGet 包。
+
+```bash
+dotnet add package Empostor.Api --prerelease
+```
+
+当前版本均为预发布版（`2.0.0-ci.*`），跟随服务器的 nightly 构建——在正式版 `2.0.0` 发布之前，请保留 `--prerelease` 参数。
 
 ### Visual Studio
 
@@ -61,7 +66,7 @@ https://dotnet.microsoft.com/download
 ### Dotnet CLI
 
 1. 在命令提示符/bash 中打开项目文件夹。
-2. 运行 `dotnet add package Empostor.Api`。
+2. 运行 `dotnet add package Empostor.Api --prerelease`。
 
 ## 4. 插件类
 
@@ -317,7 +322,7 @@ namespace Empostor.Plugins.Example
 
 **示例**
 
-预发布版 `Empostor.Api` 包 `1.2.0-ci.54` 属于 AppVeyor 上的构建 `54`，可在 https://ci.appveyor.com/project/Empostor/Empostor/build/54 找到。注意 URL 末尾的 `54`。
+预发布版 `Empostor.Api` 包 `2.0.0-ci.586` 对应服务器 nightly 构建 `86`。后缀中的 `N` 是 GitHub Actions 运行编号加 500——与 [nightly 发布](https://github.com/Empostor/Empostor/releases/tag/nightly) 使用同一套编号。请让包版本中的 `N` 与你运行的 nightly 构建对应。
 
 ### 国际化 (i18n)
 

@@ -17,19 +17,13 @@ Configure the verification mode in `config.json` under `AuthApi`:
 | Mode | Description |
 |---|---|
 | `Innersloth` | Calls Innersloth's official API directly. Simple, no external service needed. |
-| `Niko` | Uses Niko's au-verify service. Requires a NikoApiKey and a running verification server. |
 | `Ume` | Uses UmeAuthService — a lightweight HTTP proxy. No player action required. |
-| `Relay` | Custom relay server. Compatible with any verification backend. |
-| `Both` | Tries Niko first (if custom ApiKey is set), then Ume, then falls back to Innersloth. |
+| `Both` | Tries Ume first, then falls back to Innersloth. |
 
 ```json
 {
   "AuthApi": {
-    "Mode": "Both",
-    "NikoApiKey": "niko-request-api-key",
-    "NikoApiBaseUrl": "https://au-verify.niko233.top",
-    "RelayApiBaseUrl": "http://localhost:5100",
-    "RelayApiKey": "empostor-relay-api-key-change-me",
+    "Mode": "Ume",
     "UmeApiBaseUrl": "https://auverify.hayashiume.top",
     "UmeApiKey": "sk-empostor-globalapikey"
   }
@@ -38,9 +32,9 @@ Configure the verification mode in `config.json` under `AuthApi`:
 
 ### UmeAuthService
 
-[UmeAuthService](https://auverify.hayashiume.top) is a lightweight relay API that proxies the EOS Token to Innersloth and returns a paired **PUID + FriendCode** in one response. Unlike Niko's au-verify, players do not need to join a verification server.
+[UmeAuthService](https://auverify.hayashiume.top) is a lightweight relay API that proxies the EOS Token to Innersloth and returns a paired **PUID + FriendCode** in one response. Players do not need to join a verification server.
 
-Empostor includes a built-in ApiKey (`sk-empostor-globalapikey`) — just set `Mode` to `Ume` or `Both`.
+Empostor includes a built-in ApiKey (`sk-empostor-globalapikey`) — just set `Mode` to `Ume`.
 
 For standalone API keys, contact HayashiUme:
 - QQ: **2558527272**
@@ -60,4 +54,4 @@ For standalone API keys, contact HayashiUme:
 
 ### PUID Cross-Validation
 
-All verification modes (`Niko`, `Ume`, `Relay`) include **PUID cross-validation**: the ProductUserId returned by the external API is compared against the PUID extracted from the player's own EOS JWT. If they don't match, the FriendCode is rejected. This prevents any possibility of cross-player FriendCode assignment.
+`Ume` mode includes **PUID cross-validation**: the ProductUserId returned by the external API is compared against the PUID extracted from the player's own EOS JWT. If they don't match, the FriendCode is rejected. This prevents any possibility of cross-player FriendCode assignment.

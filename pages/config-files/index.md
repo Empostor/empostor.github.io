@@ -32,11 +32,7 @@ The main server configuration file. See [Server Configuration](../get-started/co
   "PlayerStats": { "Enabled": false, "PersistToFile": true },
   "ChatFilter": { "Enabled": false, "BlockedWords": [], ... },
   "AuthApi": {
-    "Mode": "Both",
-    "NikoApiKey": "niko-request-api-key",
-    "NikoApiBaseUrl": "https://au-verify.niko233.top",
-    "RelayApiBaseUrl": "http://localhost:5100",
-    "RelayApiKey": "empostor-relay-api-key-change-me",
+    "Mode": "Ume",
     "UmeApiBaseUrl": "https://auverify.hayashiume.top",
     "UmeApiKey": "sk-empostor-globalapikey"
   }
@@ -60,11 +56,7 @@ The `AuthApi` section controls how Empostor fetches player FriendCodes for ident
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `Mode` | string | `Innersloth` | Verification mode: `Innersloth`, `Niko`, `Ume`, `Relay`, or `Both` |
-| `NikoApiKey` | string | `niko-request-api-key` | API key for Niko's au-verify service |
-| `NikoApiBaseUrl` | string | `https://au-verify.niko233.top` | Base URL for Niko's au-verify API |
-| `RelayApiBaseUrl` | string | (empty) | Base URL for a custom relay verification server |
-| `RelayApiKey` | string | (empty) | API key for the relay server |
+| `Mode` | string | `Innersloth` | Verification mode: `Innersloth`, `Ume`, or `Both` |
 | `UmeApiBaseUrl` | string | `https://auverify.hayashiume.top` | Base URL for UmeAuthService |
 | `UmeApiKey` | string | `sk-empostor-globalapikey` | Built-in API key for UmeAuthService |
 
@@ -73,10 +65,8 @@ The `AuthApi` section controls how Empostor fetches player FriendCodes for ident
 | Mode | Behavior |
 |---|---|
 | `Innersloth` | Calls Innersloth's official API directly. No external service needed. |
-| `Niko` | Uses Niko's au-verify service. Requires a valid `NikoApiKey`. Player must join a verification server. |
 | `Ume` | Uses UmeAuthService — a lightweight HTTP proxy. No player action required. |
-| `Relay` | Uses a custom relay server at `RelayApiBaseUrl`. |
-| `Both` | If `NikoApiKey` is customized → tries Niko first, then Ume, then Innersloth. Otherwise → Ume first, then Niko, then Innersloth. |
+| `Both` | Tries Ume first, then falls back to Innersloth. |
 
 ---
 

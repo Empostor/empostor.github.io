@@ -32,11 +32,7 @@ Empostor 使用多个用户可编辑的文件进行配置、自定义和本地�
   "PlayerStats": { "Enabled": false, "PersistToFile": true },
   "ChatFilter": { "Enabled": false, "BlockedWords": [], ... },
   "AuthApi": {
-    "Mode": "Both",
-    "NikoApiKey": "niko-request-api-key",
-    "NikoApiBaseUrl": "https://au-verify.niko233.top",
-    "RelayApiBaseUrl": "http://localhost:5100",
-    "RelayApiKey": "empostor-relay-api-key-change-me",
+    "Mode": "Ume",
     "UmeApiBaseUrl": "https://auverify.hayashiume.top",
     "UmeApiKey": "sk-empostor-globalapikey"
   }
@@ -60,11 +56,7 @@ EMPOSTOR_Admin__Password=mysecretpassword
 
 | 字段 | 类型 | 默认值 | 描述 |
 |---|---|---|---|
-| `Mode` | string | `Innersloth` | 验证模式：`Innersloth`、`Niko`、`Ume`、`Relay` 或 `Both` |
-| `NikoApiKey` | string | `niko-request-api-key` | Niko au-verify 服务的 API 密钥 |
-| `NikoApiBaseUrl` | string | `https://au-verify.niko233.top` | Niko au-verify API 的基础 URL |
-| `RelayApiBaseUrl` | string | （空） | 自定义中继验证服务器的基础 URL |
-| `RelayApiKey` | string | （空） | 中继服务器的 API 密钥 |
+| `Mode` | string | `Innersloth` | 验证模式：`Innersloth`、`Ume` 或 `Both` |
 | `UmeApiBaseUrl` | string | `https://auverify.hayashiume.top` | UmeAuthService 的基础 URL |
 | `UmeApiKey` | string | `sk-empostor-globalapikey` | UmeAuthService 的内置 API 密钥 |
 
@@ -73,10 +65,8 @@ EMPOSTOR_Admin__Password=mysecretpassword
 | 模式 | 行为 |
 |---|---|
 | `Innersloth` | 直接调用 Innersloth 官方 API。无需外部服务。 |
-| `Niko` | 使用 Niko 的 au-verify 服务。需要有效的 `NikoApiKey`。玩家需加入验证服务器。 |
 | `Ume` | 使用 UmeAuthService——轻量级 HTTP 代理。无需玩家操作。 |
-| `Relay` | 使用 `RelayApiBaseUrl` 处的自定义中继服务器。 |
-| `Both` | 若 `NikoApiKey` 已自定义 → 优先 Niko，其次 Ume，最后 Innersloth。否则 → 优先 Ume，其次 Niko，最后 Innersloth。 |
+| `Both` | 优先 Ume，最后回退到 Innersloth。 |
 
 ---
 

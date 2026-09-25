@@ -47,8 +47,13 @@ You only have to follow the instructions of one below.
 
 ### Quick
 
-Install the `Empostor.Api` NuGet package.  
-Make sure to get a prerelease if you are writing a plugin for a dev release of the server.
+Install the [`Empostor.Api`](https://www.nuget.org/packages/Empostor.Api) NuGet package.
+
+```bash
+dotnet add package Empostor.Api --prerelease
+```
+
+Current versions are prereleases (`2.0.0-ci.*`) that track the nightly server builds — keep the `--prerelease` flag until a stable `2.0.0` is released.
 
 ### Visual Studio
 
@@ -61,7 +66,7 @@ Make sure to get a prerelease if you are writing a plugin for a dev release of t
 ### Dotnet CLI
 
 1. Open your project folder in command prompt / bash.
-2. Run `dotnet add package Empostor.Api`.
+2. Run `dotnet add package Empostor.Api --prerelease`.
 
 ## 4. The plugin class
 
@@ -318,7 +323,7 @@ It is important to use the correct versions when working with `Empostor.Api` pre
 
 **Example** 
 
-The prerelease `Empostor.Api` package `1.2.0-ci.54` belongs to build `54` on AppVeyor, which can be found here https://ci.appveyor.com/project/Empostor/Empostor/build/54. Notice the `54` on the end of the url.
+The prerelease `Empostor.Api` package `2.0.0-ci.586` belongs to nightly server build `86`. The `ci.N` suffix is the GitHub Actions run number plus 500 — the same numbering used by the [nightly releases](https://github.com/Empostor/Empostor/releases/tag/nightly). Match the `N` in the package version with the nightly build you are running.
 
 ### Internationalization (i18n)
 
