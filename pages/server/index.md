@@ -14,9 +14,9 @@ The **[Admin Panel](admin-panel.md)** is the built-in web interface at `http://y
 | :--- | :--- |
 | Dashboard, games, clients, kick & ban | [Admin Panel](admin-panel.md) |
 | Per-player game statistics | [Statistics](statistics.md) |
-| Browse and install community plugins | [Plugin Marketplace](plugin-marketplace.md) |
+| Browse and install community plugins, switch themes | [Marketplace](plugin-marketplace.md) |
 | In-game reports | [Reports](admin-panel.md#reports) |
-| Version check against GitHub releases | [Updates](admin-panel.md#updates) |
+| Version check and package download from GitHub releases | [Updates](admin-panel.md#updates) |
 
 ![Admin Panel](/images/overview_panel.png)
 
@@ -40,7 +40,7 @@ The server also serves plain HTTP content on port 22023:
 
 - **Bans** — by IP or friend code, persisted to `bans.json`. See [Ban](admin-panel.md#ban).
 - **Authentication** — password-protected admin session with HTTP-only cookies and rate limiting. See [Authentication](admin-panel.md#authentication).
-- **Server updates** — compare your running version with the latest GitHub release. See [Updates](admin-panel.md#updates).
+- **Server updates** — compare against the latest GitHub release (stable or nightly) and pull the matching package onto the machine. See [Updates](admin-panel.md#updates).
 
 ## Extending Further
 

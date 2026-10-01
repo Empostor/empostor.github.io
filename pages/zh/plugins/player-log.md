@@ -1,15 +1,17 @@
 # 玩家日志
 
-按玩家记录整局游戏的行为轨迹，并在管理面板中提供查阅，便于事后追溯与审计。
+按玩家记录整局游戏的行为轨迹，并在管理面板的插件页中提供查阅，便于事后追溯与审计。
 
-**插件 ID：** `gg.empostor.playerlog` · **数据文件：** `Data/player_logs.json`
+**插件 ID：** `gg.empostor.playerlog` · **数据文件：** `Data/PlayerLogData.json`
+
+这是**独立插件**，不随 Empostor 内置。未安装时管理面板里不会出现任何玩家日志入口；安装 `.dll` 并重启后，导航栏的 **Plugins** 区会出现 **Player Log**。
 
 | 参考内容 | 位置 |
 | :--- | :--- |
 | 配置 | 无 |
 | 指令 | 无 |
-| 管理面板 | [玩家日志标签页](#在管理面板中使用) |
-| HTTP API | 无 —— 通过面板导出 |
+| 管理面板 | 插件页 **Player Log**（见[在管理面板中使用](#在管理面板中使用)） |
+| HTTP API | `GET /player-log/export`（需管理面板会话 Cookie） |
 
 与内存中查询不同，该插件会把滚动历史持久化到磁盘，服务器重启后仍然存在。
 
@@ -46,11 +48,12 @@
 
 ## 在管理面板中使用
 
-在[管理面板](../server/admin-panel.md)打开「玩家日志」标签页，可以：
+在[管理面板](../server/admin-panel.md)导航栏的 **Plugins** 区打开 **Player Log** 插件页，可以：
 
-- 浏览全部记录。
-- 按玩家与事件类型筛选。
-- 将数据导出为 JSON。
+- 用 **Player** 下拉筛选，选项为 `All players` 或某个 `#ID 昵称 (好友代码)`。
+- 用 **Page** 下拉翻页，每页 100 条。
+- 点 **Export as JSON** 得到导出体积提示，再打开 `/player-log/export` 下载 JSON（需要管理面板会话 Cookie；加 `?clientId=123` 可只导出单个玩家）。
+- 用 **Clear logs** 下拉选择范围（全部 / 1 小时 / 24 小时 / 7 天 / 30 天），再点 **Clear Logs** 执行清理。
 
 导出支持单个玩家与全量日志两种粒度，便于把证据交给其他管理员核查。
 
@@ -62,7 +65,7 @@
 
 | 项目 | 值 |
 | :--- | :--- |
-| 路径 | `Data/player_logs.json` |
+| 路径 | `Data/PlayerLogData.json`（旧版 `Data/player_logs.json` 会自动迁移） |
 | 格式 | JSON 记录数组 |
 | 最大条数 | 10,000（超出后丢弃最旧） |
 | 持久化 | 重启后保留 |

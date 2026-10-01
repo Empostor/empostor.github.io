@@ -81,16 +81,7 @@ Empostor 提供一些兼容性选项以增加灵活性，但可能无法正常�
 
 ### HPLP（公共大厅列表）
 
-为 Starlight 客户端发现提供公共游戏列表端点。详见 [HPLP](../reference/hplp.md)。
-
-> **支持热修改**：通过管理面板更改的设置会保存到 `Data/HplpData.json`。以下 `config.json` 值仅在首次启动时作为初始默认值。
-
-| 键 | 默认值 | 描述 |
-| :--- | :--- | :--- |
-| **Enabled** | `false` | 是否启用 HPLP 端点（`GET /x-api/games`）。 |
-| **RegionId** | `"default"` | 向 Starlight 客户端报告的区域标识符。 |
-| **RegionName** | `"Empostor Server"` | 在 Starlight 中显示的人类可读区域名称。 |
-| **PublicUrl** | `""` | Starlight 客户端的公开 URL。为空时自动生成。 |
+HPLP 的设置**不在 `config.json` 中** —— 请在管理面板的 HPLP 页面配置，保存后写入 `Data/HplpData.json`。详见 [HPLP](../reference/hplp.md)。
 
 ### PlayerStats / ChatFilter
 

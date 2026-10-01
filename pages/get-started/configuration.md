@@ -82,16 +82,7 @@ Send game events to Discord channels via webhooks. Events are split into two cat
 
 ### HPLP
 
-Serve a public game list endpoint for Starlight client discovery. See [HPLP](../reference/hplp.md) for details.
-
-> **Hot-editable**: Settings changed via the Admin Panel are saved to `Data/HplpData.json`. The `config.json` values below are only used as initial defaults.
-
-| Key | Default | Description |
-| :--- | :--- | :--- |
-| **Enabled** | `false` | Whether the HPLP endpoint (`GET /x-api/games`) is enabled. |
-| **RegionId** | `"default"` | Region identifier reported to Starlight clients. |
-| **RegionName** | `"Empostor Server"` | Human-readable region name displayed in Starlight. |
-| **PublicUrl** | `""` | Public URL for Starlight clients. Auto-generated if empty. |
+HPLP settings are **not** in `config.json` — configure them on the HPLP page of the admin panel, which saves to `Data/HplpData.json`. See [HPLP](../reference/hplp.md) for details.
 
 ### PlayerStats / ChatFilter
 

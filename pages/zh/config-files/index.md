@@ -27,7 +27,7 @@ Empostor 使用多个用户可编辑的文件进行配置、自定义和本地�
   "AntiCheat": { "Enabled": true, "BanIpFromGame": true, ... },
   "Compatibility": { "AllowFutureGameVersions": false, ... },
   "Debug": { "GameRecorderEnabled": false, "GameRecorderPath": "" },
-  "Admin": { "Password": "CHANGE-ME", "MarketplaceUrl": "..." },
+  "Admin": { "Password": "CHANGE-ME", "MarketplaceUrl": "...", "GitHubToken": "" },
   "DiscordWebhook": { "MatchmakerUrl": "", "AdminUrl": "" },
   "PlayerStats": { "Enabled": false, "PersistToFile": true },
   "ChatFilter": { "Enabled": false, "BlockedWords": [], ... },

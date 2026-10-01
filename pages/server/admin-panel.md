@@ -79,14 +79,6 @@ Clicking a **player name** opens a modal overlay showing:
 
 ---
 
-## Player Logs
-
-![Player Logs](/images/player_logs.png)
-
-Browse per-player activity logs. Filter by player and event type, and export data as JSON. Useful for auditing player behavior and investigating reports.
-
----
-
 ## Statistics
 
 
@@ -159,18 +151,69 @@ Toggles a game between Public and Private. This affects whether the room appears
 
 ---
 
-## Plugin Marketplace
+## Marketplace
 
 
-Install community plugins straight from the admin panel. See [Plugin Marketplace](plugin-marketplace.md) for the `plugins.json` format and versioning rules.
+The marketplace has two categories, switched with the **Plugins** / **Themes** buttons at the top of the page:
+
+- **Plugins** — install community plugins. The `.dll` lands in `plugins/` and needs a server restart.
+- **Themes** — browse and apply admin panel themes. Themes that are already available (built-in, supplied by a plugin, or dropped into `Pages/themes/`) show **Apply**; catalogue entries that are not installed yet show **Install**, which writes `theme.json` into `Pages/themes/{Id}/` and is switchable **without a restart**.
+
+See [Plugin Marketplace](plugin-marketplace.md) for the catalogue formats and versioning rules.
 
 ---
 
 ## Updates
 
-Queries the GitHub Releases API for the latest Empostor release and compares it with the running version. If a newer version is available, a link to the release page is shown. The server does not update itself automatically.
+The **Updates** page checks the server version against GitHub and can pull the matching package for this machine. Empostor never replaces a running installation by itself.
 
-The GitHub repository checked is `Empostor/Empostor` by default. If you maintain a fork, this is hardcoded in `MarketplaceController.cs`.
+### Release channels
+
+Pick the channel at the top of the page:
+
+| Channel | Source | Version taken from |
+|---------|--------|--------------------|
+| Stable release | GitHub Release `latest` (tagged releases) | The release tag without its leading `v`, e.g. `2.0.0` |
+| Nightly build | The prerelease tagged `nightly`, republished by CI on every push to `main` | The value inside the release title, e.g. `Nightly build (2.0.0-ci.599)` → `2.0.0-ci.599` |
+| Specific version | A dropdown listing recent releases | Same as stable: the tag without `v` |
+
+Switching the channel re-queries immediately; **Check for Updates** refreshes on demand. The result lists the running version, the latest version, the tag, the publish date, and the package that release offers for the current platform. When the latest version matches the running one it is reported as *Up to date*.
+
+### Downloading a package
+
+**Download package** fetches the archive for the selected version and stores it on the server. Nothing is unpacked or swapped automatically.
+
+- **Trigger** — manual only. It runs when an administrator clicks **Download package** on the Updates page; the server never downloads in the background.
+- **Platform** — the server matches its own runtime (`win-x64`, `linux-x64`, `linux-arm`, `linux-arm64`, `osx-x64`) against the release assets. Windows ships as `.zip`, every other platform only as `.tar.gz`. When a release has no asset for this platform the button is hidden.
+- **Version** — taken from the table above: the release tag for stable, the parenthesised value in the title for nightly.
+- **File name** — the original GitHub release asset name is kept, e.g. `Empostor-Server_2.0.0_win-x64.zip` for a tagged release or `Empostor-Server-latest-win-x64.zip` for nightly.
+- **Path** — `Update/{Version}/xxx.zip`, relative to the server process working directory:
+  - `Update` — fixed top-level directory
+  - `{Version}` — the version above, with any character other than letters, digits, `.`, `-`, `_` and `+` replaced by `_`
+  - `xxx.zip` — the untouched asset name
+
+  A Windows nightly download therefore lands in `Update/2.0.0-ci.599/Empostor-Server-latest-win-x64.zip`.
+- A file that already exists with the same size is not downloaded again; the panel reports *Already downloaded*.
+- Shut down, unpack, replace, restart — upgrading is still a manual step.
+
+The GitHub repository checked is `Empostor/Empostor` by default. If you maintain a fork, this is hardcoded in `UpdateController.cs`.
+
+### GitHub API limits
+
+Release metadata comes from the GitHub API. **Anonymous requests are capped at 60 per hour per IP**, which servers behind a shared egress IP hit easily — the API answers `403 (rate limit exceeded)`. In that case the panel shows the reason and the reset time in amber instead of a raw HTTP exception.
+
+Repeating the same query within 60 seconds returns a cached result and never reaches GitHub, so hammering **Check for Updates** costs no extra quota.
+
+To remove the limit, give the server a token in `config.json` (read-only release metadata on a public repo needs no scopes at all):
+
+```json
+"Admin": {
+  "Password": "...",
+  "GitHubToken": "ghp_xxxxxxxxxxxxxxxx"
+}
+```
+
+A token raises the allowance to 5000 requests per hour. Restart the server after changing it.
 
 ---
 

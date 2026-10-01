@@ -1,15 +1,17 @@
 # Player Log
 
-Records per-player activity across games and exposes it in the admin panel, making it possible to audit behaviour days after the fact.
+Records per-player activity across games and exposes it in the plugin page of the admin panel, making it possible to audit behaviour days after the fact.
 
-**Plugin ID:** `gg.empostor.playerlog` · **Data file:** `Data/player_logs.json`
+**Plugin ID:** `gg.empostor.playerlog` · **Data file:** `Data/PlayerLogData.json`
+
+This is a **standalone plugin**, not built into Empostor. Without it installed there is no player log entry anywhere in the admin panel; install the `.dll`, restart, and **Player Log** appears under **Plugins** in the sidebar.
 
 | Reference | Where |
 | :--- | :--- |
 | Configuration | None |
 | Commands | None |
-| Admin Panel | [Player Logs tab](#using-the-admin-panel) |
-| HTTP API | None — export via the panel |
+| Admin Panel | Plugin page **Player Log** (see [Using the Admin Panel](#using-the-admin-panel)) |
+| HTTP API | `GET /player-log/export` (requires the admin session cookie) |
 
 Unlike the in-memory admin views, this plugin persists a rolling history to disk, so it survives a server restart.
 
@@ -46,13 +48,14 @@ Every entry stores the same set of fields:
 
 ## Using the Admin Panel
 
-Open the **Player Logs** tab in the [Admin Panel](../server/admin-panel.md) to:
+Open the **Player Log** plugin page under **Plugins** in the [Admin Panel](../server/admin-panel.md) sidebar to:
 
-- Browse all recorded entries.
-- Filter by player and by event type.
-- Export the result as JSON.
+- Filter with the **Player** dropdown — `All players`, or a specific `#ID Name (FriendCode)`.
+- Move through pages with the **Page** dropdown, 100 entries per page.
+- Click **Export as JSON** for the payload size, then open `/player-log/export` to download it (the admin session cookie is required; add `?clientId=123` for a single player).
+- Pick a range in the **Clear logs** dropdown (all / 1 hour / 24 hours / 7 days / 30 days) and click **Clear Logs**.
 
-Exports work for a single selected player as well as for the whole log, which is useful when handing evidence to another operator.
+Exports work for a single player as well as for the whole log, which is useful when handing evidence to another operator.
 
 ![Player Logs](/images/player_logs.png)
 
@@ -64,7 +67,7 @@ Data is written back asynchronously after every write and is loaded from disk on
 
 | Aspect | Value |
 | :--- | :--- |
-| Path | `Data/player_logs.json` |
+| Path | `Data/PlayerLogData.json` (a legacy `Data/player_logs.json` is migrated automatically) |
 | Format | JSON array of entry objects |
 | Max entries | 10,000 (oldest discarded first) |
 | Persistence | Survives restarts |

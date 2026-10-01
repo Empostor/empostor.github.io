@@ -14,9 +14,9 @@
 | :--- | :--- |
 | 看板、房间、客户端、踢出与封禁 | [管理面板](admin-panel.md) |
 | 玩家战绩统计 | [统计分析](statistics.md) |
-| 浏览并安装社区插件 | [插件市场](plugin-marketplace.md) |
+| 浏览并安装社区插件、切换主题 | [市场](plugin-marketplace.md) |
 | 游戏内举报记录 | [举报](admin-panel.md#举报) |
-| 与 GitHub 发行版比对版本 | [更新](admin-panel.md#更新) |
+| 与 GitHub 发行版比对版本、下载对应安装包 | [更新](admin-panel.md#更新) |
 
 ![管理面板](/images/overview_panel.png)
 
@@ -40,7 +40,7 @@
 
 - **封禁** —— 支持按 IP 或好友代码封禁，持久化写入 `bans.json`，详见[封禁](admin-panel.md#封禁)。
 - **身份验证** —— 管理会话密码保护，配合 HttpOnly Cookie 与频率限制，详见[身份验证](admin-panel.md#身份验证)。
-- **版本更新** —— 与 GitHub 最新发行版比对版本，详见[更新](admin-panel.md#更新)。
+- **版本更新** —— 与 GitHub 最新发行版（正式版或 nightly）比对版本，并可把适配本机的安装包下载到服务器，详见[更新](admin-panel.md#更新)。
 
 ## 进一步扩展
 

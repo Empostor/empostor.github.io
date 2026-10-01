@@ -74,14 +74,6 @@ Empostor 内置基于 Web 的管理面板，可通过 `http://your-server:22023/
 
 ---
 
-## 玩家日志
-
-![玩家日志](/images/player_logs.png)
-
-浏览每个玩家的活动日志。可按玩家和事件类型筛选，并导出为 JSON 数据。适用于审计玩家行为和调查举报。
-
----
-
 ## 统计
 
 
@@ -154,18 +146,69 @@ Empostor 内置基于 Web 的管理面板，可通过 `http://your-server:22023/
 
 ---
 
-## 插件市场
+## 市场
 
 
-可直接在管理面板中安装社区插件。`plugins.json` 格式与版本规则请见 [插件市场](plugin-marketplace.md)。
+市场分为两个分类，用页面顶部的 **Plugins** / **Themes** 按钮切换：
+
+- **Plugins** —— 安装社区插件，`.dll` 会下载到 `plugins/`，安装后需要重启服务器。
+- **Themes** —— 浏览并应用管理面板主题。已经可用的主题（内置、插件提供、`Pages/themes/` 下的）直接显示 **Apply**；只在清单里、尚未安装的主题显示 **Install**，安装会把 `theme.json` 写入 `Pages/themes/{Id}/`，**无需重启**即可切换。
+
+清单格式与版本规则请见 [插件市场](plugin-marketplace.md)。
 
 ---
 
 ## 更新
 
-查询 GitHub Releases API 获取最新 Empostor 版本并与当前运行版本比较。如果有新版本可用，显示发布页面链接。服务器不会自动更新。
+**更新**页面用于把服务器版本与 GitHub 上的发布做比较，并把适配本机的安装包取回服务器。Empostor 不会自动替换正在运行的安装。
 
-默认检查的 GitHub 仓库为 `Empostor/Empostor`。如果你维护分支版本，这在 `MarketplaceController.cs` 中是硬编码的。
+### 版本通道
+
+页面顶部可选择要查询的通道：
+
+| 通道 | 来源 | 版本号取自 |
+|------|------|-----------|
+| Stable release | GitHub Release 的 `latest`（正式发布） | 发布标签去掉前缀 `v`，例如 `2.0.0` |
+| Nightly build | 标签为 `nightly` 的预发布，每次推送到 `main` 由 CI 覆盖更新 | 发布标题括号内的值，例如 `Nightly build (2.0.0-ci.599)` → `2.0.0-ci.599` |
+| Specific version | 下拉列出最近的若干发布，可任选一个标签 | 与 Stable 相同：标签去掉 `v` |
+
+切换通道会立即重新查询，**Check for Updates** 按钮可随时手动刷新。结果会列出当前版本、最新版本、标签、发布时间，以及该发布为**当前平台**提供的安装包。版本一致时会标记为 *Up to date*。
+
+### 下载安装包
+
+**Download package** 会把所选版本的压缩包取回并保存到服务器本机，不会自动解压或替换任何文件。
+
+- **触发方式** —— 仅手动：只有管理员在更新页面点击 **Download package** 才会执行，服务器不会在后台自动下载。
+- **平台判定** —— 服务器按自身运行平台（`win-x64`、`linux-x64`、`linux-arm`、`linux-arm64`、`osx-x64`）在发布附件中匹配。Windows 提供 `.zip`，其它平台只有 `.tar.gz`；若该发布没有本平台的包，按钮会被隐藏。
+- **版本号来源** —— 见上表：正式版取发布标签，nightly 取标题括号内的版本。
+- **文件名来源** —— 直接沿用 GitHub 发布附件的原始文件名，例如正式版的 `Empostor-Server_2.0.0_win-x64.zip`，或 nightly 的 `Empostor-Server-latest-win-x64.zip`。
+- **保存路径拼装规则** —— `Update/{Version}/xxx.zip`，相对于**服务器进程的工作目录**：
+  - `Update` —— 固定的一级目录
+  - `{Version}` —— 上面的版本号，其中除字母、数字、`.`、`-`、`_`、`+` 以外的字符一律替换为 `_`
+  - `xxx.zip` —— 原样保留的附件名
+
+  因此在 Windows 上下载 nightly 会落到 `Update/2.0.0-ci.599/Empostor-Server-latest-win-x64.zip`。
+- 已存在且大小相同的文件不会重复下载，面板会提示 *Already downloaded*。
+- 停服、解压、替换、重启 —— 升级本身仍然是手动步骤。
+
+默认检查的 GitHub 仓库为 `Empostor/Empostor`。如果你维护分支版本，这在 `UpdateController.cs` 中是硬编码的。
+
+### GitHub API 限额
+
+发布信息来自 GitHub API。**未认证请求每小时每 IP 只有 60 次**，共享出口 IP 的服务器很容易撞到，报 `403 (rate limit exceeded)`。这种情况下面板会用琥珀色显示原因和限额重置时间，而不是一句原始的 HTTP 异常。
+
+同一版本的重复查询在 60 秒内直接返回缓存结果，不会再打 GitHub；因此连点 **Check for Updates** 不会消耗额外额度。
+
+要彻底解决，在 `config.json` 里给一个 token（公开仓库只读发布元数据，不需要任何 scope）：
+
+```json
+"Admin": {
+  "Password": "...",
+  "GitHubToken": "ghp_xxxxxxxxxxxxxxxx"
+}
+```
+
+带上 token 后限额提升到 5000 次/小时。改完需要重启服务器。
 
 ---
 

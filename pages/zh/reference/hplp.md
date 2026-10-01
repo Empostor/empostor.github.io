@@ -2,26 +2,15 @@
 
 Empostor 可以提供与 [Starlight](https://github.com/All-Of-Us-Mods/starlight-releases) Android 启动器兼容的公共游戏列表端点。这使得 Starlight 客户端可以通过 Starlight 的"大厅"界面发现并加入你的 Empostor 服务器上托管的游戏。
 
-此功能**默认禁用**。通过**管理面板**（HPLP 选项卡）启用，或在 `config.json` 中设置初始默认值。
+此功能**默认禁用**。所有设置都在**管理面板**的 HPLP 页面里修改，保存后立即生效。`config.json` 中**没有** HPLP 段，本功能也不读取配置文件。
 
-> **注意**：通过管理面板更改的设置会持久化到 `Data/HplpData.json`，重启后仍然有效。`config.json` 中的值仅在首次启动时作为回退默认值使用。
+> **注意**：设置持久化在 `Data/HplpData.json`，重启后仍然有效。想恢复下表的内置默认值，删除该文件即可。
 
-## 配置
+## 设置
 
-将 `HPLP` 部分添加到 `config.json`：
+在管理面板的 **HPLP** 页面中修改，字段与 `Data/HplpData.json` 一一对应：
 
-```json
-{
-  "HPLP": {
-    "Enabled": false,
-    "RegionId": "default",
-    "RegionName": "Empostor Server",
-    "PublicUrl": ""
-  }
-}
-```
-
-| 键 | 默认值 | 描述 |
+| 字段 | 默认值 | 描述 |
 | :--- | :--- | :--- |
 | **Enabled** | `false` | 是否启用 HPLP 端点（`GET /x-api/games`）。 |
 | **RegionId** | `"default"` | 向 Starlight 客户端报告的区域标识符。使用简短的唯一 ID，如 `"meu"` 或 `"usw"`。 |
