@@ -36,10 +36,13 @@ Empostor has an Anticheat that makes it possible to kick cheaters from games aut
 | **EnableMustBeHostChecks**    | `true`    | Enables checks that check if players are the host before they can do actions that require them to be host of the game. This includes starting the game and spawning objects.                                        |
 | **EnableColorLimitChecks**    | `true`    | Enables checks that checks if players request colors that are already in use.                                                                                                                                       |
 | **EnableNameLimitChecks**     | `true`    | Enables checks that checks if player names have a length that is possible to set using the user interface.                                                                                                          |
+| **EnableItemLimitChecks**     | `true`    | Enables checks that reject packets carrying more items than the game allows. Currently used for the number of images a Spirit Guide sends (1–3 are allowed).                                                        |
 | **EnableOwnershipChecks**     | `true`    | Enables checks that check if players are allowed to perform a certain action on themself or another player.                                                                                                         |
 | **EnableRoleChecks**          | `true`    | Enables checks that check if players have the correct role when performing certain role abilities like venting or murdering.                                                                                        |
 | **EnableTargetChecks**        | `true`    | Enables checks that check if certain packets to everyone that should only have been sent to certain players or vice versa. This includes sending votes or network objects.                                          |
 | **ForbidProtocolExtensions**  | `true`    | If disabled allows players to send network packets that go beyond the network packets sent by the vanilla game. This is necessary for most mods that need all players to install it.                                |
+| **EnablePacketSizeChecks**    | `true`    | Enables checks that reject inbound network packets larger than `PacketSizeLimit`.                                                                                                                                   |
+| **PacketSizeLimit**           | `1203`    | Maximum size of a single inbound packet, in bytes.                                                                                                                                                                  |
 
 ### Compatibility
 

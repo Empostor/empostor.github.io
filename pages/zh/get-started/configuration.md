@@ -35,10 +35,13 @@ Empostor 内置反作弊功能，可自动踢出作弊玩家。注意反作弊�
 | **EnableMustBeHostChecks** | `true` | 检查玩家是否为房主，才能执行需要房主权限的操作，包括开始游戏和生成对象。 |
 | **EnableColorLimitChecks** | `true` | 检查玩家是否请求已被占用的颜色。 |
 | **EnableNameLimitChecks** | `true` | 检查玩家名称长度是否在界面允许的范围内。 |
+| **EnableItemLimitChecks** | `true` | 检查玩家是否发送了游戏内不可能存在的道具数量。目前用于灵魂向导（Spirit Guide）发送的图片数量，只允许 1–3 张。 |
 | **EnableOwnershipChecks** | `true` | 检查玩家是否有权对自己或他人执行特定操作。 |
 | **EnableRoleChecks** | `true` | 检查玩家在执行特定角色能力（如钻通风管或杀人）时是否拥有正确的角色。 |
 | **EnableTargetChecks** | `true` | 检查本应只发给特定玩家的数据包是否被正确发送。包括投票和网络对象。 |
 | **ForbidProtocolExtensions** | `true` | 禁用则允许玩家发送超出原版游戏的网络数据包。大多数需要全员安装的模组都需要此项。 |
+| **EnablePacketSizeChecks** | `true` | 检查入站网络包是否超过 `PacketSizeLimit` 设定的大小。 |
+| **PacketSizeLimit** | `1203` | 单个入站网络包允许的最大字节数。 |
 
 ### Compatibility（兼容性）
 
